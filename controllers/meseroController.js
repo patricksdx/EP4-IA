@@ -29,7 +29,7 @@ exports.obtenerMeseros = async (req, res) => {
     try {
         const meseros = await Mesero.find();
         if (!meseros || meseros.length === 0) {
-            return res.status(404).send('No se encontraron meseros');
+            return res.status(404).send({ success: false, message: 'No se encontraron meseros'});
         }
         res.json({ success: true, meseros });
     } catch (error) {

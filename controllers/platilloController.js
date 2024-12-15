@@ -21,9 +21,14 @@ exports.crearPlatillo = async (req, res) => {
 exports.obtenerPlatillos = async (req, res) => {
     try {
         const platillos = await Platillo.find();
+
+        if (!platillos || platillos.length === 0) {
+            return res.status(404).json({ success: false, message: 'No se encontraron platillos' });
+        }
+
         res.status(200).json({ success: true, platillos });
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ success: false, error: err.message });
     }
 };
 

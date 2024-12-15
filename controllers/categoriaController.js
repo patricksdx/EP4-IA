@@ -25,20 +25,17 @@ exports.crearCategoria = async (req, res) => {
 
 exports.obtenerCategorias = async (req, res) => {
     try {
-        const { nombre } = req.body; // Recibimos el nombre de la categoría (si se pasa)
+        const { nombre } = req.body;
 
-        // Si se pasa un nombre, buscamos las categorías que coincidan
         const categorias = nombre
-            ? await Categoria.find({ nombre: { $regex: nombre, $options: 'i' } }) // Búsqueda por nombre con regex (insensible a mayúsculas/minúsculas)
-            : await Categoria.find(); // Si no se pasa nombre, obtenemos todas las categorías
+            ? await Categoria.find({ nombre: { $regex: nombre, $options: 'i' } })
+            : await Categoria.find();
 
-        // Si no se encuentran categorías, devolvemos un 404
         if (!categorias || categorias.length === 0) {
-            return res.status(404).send('No se encontraron categorías');
+            return res.status(404).send({success: true , message : 'No se encontraron categorías'});
         }
-
-        // Si las categorías existen, respondemos con las categorías encontradas
         res.json({ success: true, categorias });
+        
     } catch (error) {
         console.log(error);
         res.status(500).send('Hubo un error al obtener las categorías');

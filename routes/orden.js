@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const ordenController = require('../controllers/ordenController');  // Asegúrate de que la ruta sea correcta
+const ordenController = require('../controllers/ordenController');
 
 
 router.post('/', ordenController.crearOrden);

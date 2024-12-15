@@ -23,6 +23,9 @@ exports.crearCliente = async (req, res) => {
 exports.obtenerClientes = async (req, res) => {
     try {
         const clientes = await Cliente.find();
+        if (!clientes || clientes.length === 0) {
+            return res.status(404).send({success: true , message : 'No se encontraron clientes'});
+        }
         res.status(200).json(clientes);
     } catch (err) {
         res.status(500).json({ error: err.message });
