@@ -7,8 +7,20 @@ const app = express()
 
 conectarDB()
 
-app.use(cors())
-app.use(express.json())
+const corsOptions = {
+  origin: 'http://localhost:5173',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
+
+app.use(cors(corsOptions))
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use('/auth', require('./routes/auth'));
+app.use('/chat', require('./routes/chat'));
+app.use('/messages', require('./routes/message'));
 
 app.use('/api/categorias', require('./routes/categoria'));
 app.use('/api/meseros', require('./routes/mesero'));

@@ -7,7 +7,7 @@ router.post('/', ordenController.crearOrden);
 
 router.get('/:idMesa', ordenController.obtenerOrdenPorIdMesa);
 
-router.put('/:idMesa', ordenController.actualizarEstadoOrden);
+router.put('/:id', ordenController.actualizarEstadoOrden);
 
 router.delete('/:idMesa', ordenController.eliminarOrden);
 
