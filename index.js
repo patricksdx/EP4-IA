@@ -2,20 +2,23 @@ const express = require('express');
 const conectarDB = require('./config/db');
 const config = require('./config/global');
 const cors = require('cors');
+
 const http = require('http');
 const socketIo = require('socket.io');
 
 const app = express();
-const server = http.createServer(app);
+const server = http.createServer(app); // Servidor HTTP para Socket.IO
 const io = socketIo(server, {
-  cors: {
-    origin: "http://localhost:5173",
-    methods: ["GET", "POST"]
-  }
+    cors: {
+        origin: "http://localhost:5173", // Permite conexiones desde React
+        methods: ["GET", "POST"]
+    }
 });
 
+// Conexión a la base de datos
 conectarDB();
 
+// Configuración de CORS
 const corsOptions = {
   origin: 'http://localhost:5173',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
@@ -26,9 +29,35 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Rutas API (lo puedes dejar igual)
+// Rutas de la API
+app.use('/api/categorias', require('./routes/categoria'));
+app.use('/api/meseros', require('./routes/mesero'));
+app.use('/api/platillos', require('./routes/platillo'));
+app.use('/api/clientes', require('./routes/cliente'));
+app.use('/api/ordenes', require('./routes/orden'));
+
+// Ruta de inicio de la API
 app.use('/api', (req, res) => {
-  res.send('Bienvenido a la API');
+    res.send(`
+      <html>
+        <body>
+          <h1>Inicio de la API</h1>
+          <p>Accede a las rutas de la API aquí:</p>
+          <ul>
+            <li><a href="/api/categorias">Categorías API</a></li>
+            <li><a href="/api/meseros">Meseros API</a></li>
+            <li><a href="/api/platillos">Platillos API</a></li>
+            <li><a href="/api/clientes">Clientes API</a></li>
+            <li><a href="/api/ordenes/1">Órdenes API</a></li>
+          </ul>
+        </body>
+      </html>
+    `);
+});
+
+// Manejo de rutas no encontradas
+app.use((req, res) => {
+  res.status(404).send('Recurso no encontrado');
 });
 
 const chatNamespace = io.of('/chat');
@@ -73,7 +102,7 @@ chatNamespace.on('connection', (socket) => {
   });
 });
 
-
+// Cambia `app.listen` por `server.listen` para que Socket.IO funcione
 server.listen(config.port, () => {
-  console.log(`Servidor corriendo en el puerto ${config.port}`);
+  console.log(`El servidor corriendo por el puerto ${config.port}`);
 });
