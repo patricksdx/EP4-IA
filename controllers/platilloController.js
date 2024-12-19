@@ -26,6 +26,13 @@ exports.obtenerPlatillos = async (req, res) => {
             return res.status(404).json({ success: false, message: 'No se encontraron platillos' });
         }
 
+        // Asegúrate de que todos los platillos tengan un campo ingredientes como array
+        platillos.forEach(platillo => {
+            if (!Array.isArray(platillo.ingredientes)) {
+                platillo.ingredientes = [];
+            }
+        });
+
         res.status(200).json({ success: true, platillos });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });

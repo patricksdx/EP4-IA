@@ -6,4 +6,7 @@ const chatSchema = new mongoose.Schema({
   activo: { type: Boolean, default: true }
 });
 
-module.exports = mongoose.model('Chat', chatSchema);
+// Evitar redefinir el modelo si ya está definido
+const Chat = mongoose.models.Chat || mongoose.model('Chat', chatSchema);
+
+module.exports = Chat;

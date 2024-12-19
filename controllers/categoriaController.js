@@ -44,21 +44,25 @@ exports.obtenerCategorias = async (req, res) => {
 
 exports.actualizarCategoria = async (req, res) => {
     try {
-        const { nombre } = req.body;  // El nombre es el que se usa para buscar la categoría
+        const { nombre } = req.body; // El nombre es el que se usa para buscar la categoría
         const { nuevoNombre, nuevaDescripcion } = req.body; // Nuevos valores para nombre y descripción
 
+        // Validaciones para verificar si los campos están vacíos
+        if (!nombre || nombre.trim() === '') {
+            return res.status(400).json({ message: 'El nombre de la categoría es obligatorio para buscarla' });
+        }
         if (!nuevoNombre || nuevoNombre.trim() === '') {
             return res.status(400).json({ message: 'El nuevo nombre de la categoría es obligatorio' });
         }
-
         if (!nuevaDescripcion || nuevaDescripcion.trim() === '') {
             return res.status(400).json({ message: 'La nueva descripción de la categoría es obligatoria' });
         }
 
+        // Actualizamos la categoría por nombre
         const categoria = await Categoria.findOneAndUpdate(
-            { nombre },  // Filtramos por nombre
-            { $set: { nombre: nuevoNombre, descripcion: nuevaDescripcion } },  // Actualizamos los campos
-            { new: true }  // Devolvemos el documento actualizado
+            { nombre }, // Filtramos por nombre
+            { $set: { nombre: nuevoNombre, descripcion: nuevaDescripcion } }, // Actualizamos los campos
+            { new: true } // Devolvemos el documento actualizado
         );
 
         if (!categoria) {
@@ -67,7 +71,7 @@ exports.actualizarCategoria = async (req, res) => {
 
         res.json({ success: true, categoria });
     } catch (error) {
-        console.log(error);
+        console.error(error);
         res.status(500).send('Hubo un error al actualizar la categoría');
     }
 };

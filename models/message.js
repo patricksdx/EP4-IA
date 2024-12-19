@@ -7,4 +7,7 @@ const messageSchema = new mongoose.Schema({
   fecha: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model('Message', messageSchema);
+// Evitar redefinir el modelo si ya está definido
+const Message = mongoose.models.Message || mongoose.model('Message', messageSchema);
+
+module.exports = Message;
